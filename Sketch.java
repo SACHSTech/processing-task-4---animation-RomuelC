@@ -2,52 +2,91 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
 
+  // global variables 
 
-  /**
-   * state global variables
-   *  
-   * */ 
-  public float circleY = -50;
+  // Initialize Size
+  public float width = 1200f;
+  public float height = 800f;
 
-	
-	
-  /**
-   * Called once at the beginning of execution, put your size all in this method
-   */
+  // Scale Factor 
+  public float wScaleF = width / 400f;
+  public float hScaleF = height / 400f;
+
+  // Sun and Moon Size
+  public int sunSize = 150;
+  public int moonSize = 110;
+
+  // Star Size Scale
+  public float starScale = 0.35f;
+
+  // Circle Size 
+  public float circleX = 0;
+  public float circleY = 300 * hScaleF;
+
+  // Day and Night setting
+  public boolean day = true;
+  public boolean night = false;
+
+  // Timelapse Speed
+  public int speed = 3;
+
   public void settings() {
-	  // put your size call here
-    size(200, 200);
+
+    size((int)width, (int)height);
   }
 
-  /** 
-   * Called once at the beginning of execution.  Add initial set up
-   * values here i.e background, stroke, fill etc.
-   */
   public void setup() {
     background(210, 255, 173);
   }
 
-  /**
-   * Called repeatedly, anything drawn to the screen goes here
-   */
   public void draw() {
-	  
-    // clear out old frames
-    background(32);
 
-    // draw current frame based on state
-    ellipse(100, circleY, 50, 50);
-  
-    // modify state
-    circleY = circleY + 1;
-  
-    // reset state
-    if(circleY > height+50) {
-      circleY = 0;
+    if (day) {
+      background(122, 229, 250);
     }
+    else if (night) {
+      background(0);
+    }
+
+    if (day) {
+      fill(250, 215, 122);
+    }
+    else if (night) {
+      fill(255);
+    }
+
+    // Circle Drawing
+    if (day) {
+      ellipse(circleX, circleY, sunSize, sunSize);
+    }
+    else if (night) {
+      ellipse(circleX, circleY, moonSize, moonSize);
+    }
+
+    // Change State 
+    circleX += speed;
+    circleY = (float) ((0.0055 / wScaleF) * (Math.pow(circleX - width / 2, 2)) + (50 * hScaleF));
+ 
+    // Reset State
+    if(circleX > width + 50) {
+      circleX = 0;
+      circleY = 300 * hScaleF;
+      if (day) {
+        day = false;
+        night = true;
+      }
+      else if (night) {
+        night = false;
+        day = true;
+      }
+    }
+
+    // Grass 
+    fill(23, 130, 29); 
+    rect(0, 300 * hScaleF, width, height - 300);
+
+    // Dirt
+    fill(64, 42, 22);
+    rect(0, 320 * hScaleF, width, height - 300);
   }
-  
-  // define other methods down here.
-
-
 }
